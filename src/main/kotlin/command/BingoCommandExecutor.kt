@@ -2,6 +2,8 @@ package command
 
 import game.Game
 import game.createGame
+import listener.PlayerJoinListener
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -20,6 +22,7 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 if (args.size > 1)
                     return false
                 game = createGame(plugin)
+                Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(game!!), plugin)
             }
             "join" -> {
                 if (args.size > 1)
@@ -29,7 +32,7 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 else if (game == null)
                     sender.sendMessage("${ChatColor.RED}No game in progress.")
                 else
-                    game?.addPlayer(sender)
+                    game!!.addPlayer(sender)
             }
             else -> return false
         }
