@@ -2,3 +2,8 @@ name: Bingo
 version: 0.1.0
 main: io.github.notjagan.bingo.Bingo
 api-version: 1.18
+
+commands:
+  bingo:
+    description: Manage a bingo game
+    usage: "Usage: /<command> (start|join)"
