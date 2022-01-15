@@ -5,12 +5,14 @@ import org.bukkit.plugin.Plugin
 import util.ObjectiveTracker
 
 class Game(val state: State, private val board: Board) {
-    fun addPlayer(player: Player) {
+    fun addPlayer(player: Player): Boolean {
         val playerName = player.name
         if (!state.tracker.isTracking(playerName)) {
             board.addListeners(player)
             state.tracker.trackPlayer(playerName)
+            return true
         }
+        return false
     }
 }
 

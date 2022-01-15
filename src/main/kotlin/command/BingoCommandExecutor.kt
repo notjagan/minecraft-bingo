@@ -36,10 +36,10 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                     sender.sendMessage("${ChatColor.RED}Invalid player.")
                 else if (game == null)
                     sender.sendMessage("${ChatColor.RED}No game in progress.")
-                else {
-                    game!!.addPlayer(sender)
+                else if (game!!.addPlayer(sender))
                     Bukkit.getLogger().info("Added player ${sender.name} to current game.")
-                }
+                else
+                    sender.sendMessage("${ChatColor.RED}Already in game.")
             }
             else -> return false
         }
