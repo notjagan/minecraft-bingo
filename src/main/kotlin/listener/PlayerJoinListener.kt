@@ -7,5 +7,8 @@ import org.bukkit.event.player.PlayerJoinEvent
 
 class PlayerJoinListener(private val game: Game) : Listener {
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) = game.addPlayer(event.player)
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        if (game.state.settings.autoJoinEnabled)
+            game.addPlayer(event.player)
+    }
 }

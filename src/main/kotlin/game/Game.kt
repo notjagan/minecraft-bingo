@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import util.ObjectiveTracker
 
-class Game(private val state: State, private val board: Board) {
+class Game(val state: State, private val board: Board) {
     fun addPlayer(player: Player) {
         val playerName = player.name
         if (!state.tracker.isTracking(playerName)) {
