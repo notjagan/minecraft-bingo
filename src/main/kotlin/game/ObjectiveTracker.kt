@@ -1,5 +1,6 @@
-package util
+package game
 
+import util.Objective
 import java.util.EnumSet
 import kotlin.collections.HashMap
 
