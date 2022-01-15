@@ -1,6 +1,6 @@
 name: Bingo
 version: 0.1.0
-main: io.github.notjagan.bingo.Bingo
+main: Bingo
 api-version: 1.18
 
 commands:
