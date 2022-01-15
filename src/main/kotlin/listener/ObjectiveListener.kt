@@ -12,9 +12,9 @@ abstract class ObjectiveListener(
     private val objective: Objective,
     private val player: Player
 ) : Listener {
-    internal inline fun <T : Event> updateObjectiveStatus(event: T, isComplete: (T) -> Boolean) {
+    internal fun <T : Event> updateObjectiveStatus(event: T) {
         val playerName = player.name
-        if (state.tracker.isComplete(playerName, objective) && isComplete(event)) {
+        if (!state.tracker.isComplete(playerName, objective)) {
             state.tracker.markComplete(playerName, objective)
             Bukkit.getLogger().info("Player $playerName has complete objective ${objective.name}")
         }
