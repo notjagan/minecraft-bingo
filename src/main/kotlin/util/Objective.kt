@@ -8,8 +8,9 @@ import org.bukkit.entity.Player
 enum class Objective(val listenerFactory: (State, Objective, Player) -> ObjectiveListener) {
     ;
 
-    fun addListener(state: State, player: Player) {
+    fun addListener(state: State, player: Player): ObjectiveListener {
         val listener = listenerFactory(state, this, player)
         Bukkit.getServer().pluginManager.registerEvents(listener, state.plugin)
+        return listener
     }
 }
