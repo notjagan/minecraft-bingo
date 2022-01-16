@@ -12,7 +12,7 @@ abstract class ObjectiveListener(
     private val objective: Objective,
     private val player: Player
 ) : Listener {
-    internal fun <T : Event> updateObjectiveStatus(event: T) {
+    internal fun updateObjectiveStatus() {
         val playerName = player.name
         if (!state.tracker.isComplete(playerName, objective)) {
             state.tracker.markComplete(playerName, objective)

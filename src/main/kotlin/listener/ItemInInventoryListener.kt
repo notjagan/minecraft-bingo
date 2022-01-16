@@ -17,7 +17,7 @@ class ItemInInventoryListener(
     @EventHandler
     fun onItemHeldEvent(event: PlayerItemHeldEvent) {
         if (event.player.name == player.name && event.player.inventory.contains(material, amount))
-            updateObjectiveStatus(event)
+            updateObjectiveStatus()
     }
 
     companion object {
