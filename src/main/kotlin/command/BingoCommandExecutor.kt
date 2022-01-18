@@ -39,7 +39,7 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 else when (args.size) {
                     1 ->
                         if (game!!.addPlayer(sender)) {
-                            val color = game!!.state.tracker.getPlayerColor(sender.name)
+                            val color = game!!.state.tracker.getColorForPlayer(sender.name)
                             Bukkit.getLogger().info(
                                 "Added player ${sender.name} to current game with color ${color.name}."
                             )

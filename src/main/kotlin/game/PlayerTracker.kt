@@ -8,6 +8,8 @@ import kotlin.collections.HashMap
 class ColorInUseException() : Exception()
 
 class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
+    var goalUpdateHandler: GoalUpdateHandler? = null
+
     data class PlayerData(val objectives: EnumSet<Objective>, val color: CellColor)
 
     fun trackPlayer(playerName: String, color: CellColor) {
@@ -29,6 +31,14 @@ class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
         if (!isTracking(playerName))
             trackPlayer(playerName)
         objectiveMap[playerName]?.objectives?.add(objective)
+        goalUpdateHandler?.handleGoalUpdate(playerName, objective, true)
+    }
+
+    fun markNotComplete(playerName: String, objective: Objective) {
+        if (!isTracking(playerName))
+            trackPlayer(playerName)
+        objectiveMap[playerName]?.objectives?.remove(objective)
+        goalUpdateHandler?.handleGoalUpdate(playerName, objective, false)
     }
 
     fun isComplete(playerName: String, objective: Objective) =
@@ -36,7 +46,9 @@ class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
 
     fun clearObjectives() = objectiveMap.clear()
 
-    fun getPlayerColor(playerName: String) = objectiveMap[playerName]!!.color
+    fun getColorForPlayer(playerName: String) = objectiveMap[playerName]!!.color
+
+    fun getPlayerForColor(color: CellColor) = objectiveMap.filter { it.value.color == color }.keys.first()
 }
 
 fun createEmptyTracker(): PlayerTracker {

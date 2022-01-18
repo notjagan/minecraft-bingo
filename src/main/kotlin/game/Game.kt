@@ -1,5 +1,6 @@
 package game
 
+import bingosync.BingosyncClient
 import bingosync.CellColor
 import bingosync.RoomJoinParameters
 import org.bukkit.entity.Player
@@ -34,9 +35,12 @@ fun createRandomGame(plugin: Plugin): Game {
 }
 
 fun joinBingosyncGame(plugin: Plugin, roomCode: String, password: String): Game {
-    val state = State(plugin, createEmptyTracker(), Settings(boardSize = 5))
+    val tracker = createEmptyTracker()
+    val state = State(plugin, tracker, Settings(boardSize = 5))
     val board = Board(state)
     val game = Game(state, board)
     val roomJoinParameters = RoomJoinParameters(roomCode, "admin", password)
+    val client = BingosyncClient(roomJoinParameters, game)
+    tracker.goalUpdateHandler = client
     return game
 }

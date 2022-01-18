@@ -32,16 +32,14 @@ data class Square(
     private class SlotDeserializer : JsonDeserializer<Int>() {
         override fun deserialize(parser: JsonParser, context: DeserializationContext): Int {
             val slotString = parser.valueAsString
-            val match = Regex("slot(\\d{1,2})").find(slotString)!!
+            val match = Regex("""slot(\d{1,2})""").find(slotString)!!
             val (slotNumber) = match.destructured
-            return slotNumber.toInt()
+            return slotNumber.toInt() - 1
         }
     }
 }
 
-class Squares {
-    companion object {
-        private val bodyLens = Body.auto<List<Square>>().toLens()
-        fun fromResponse(response: Response) = bodyLens(response)
-    }
+object Squares {
+    private val bodyLens = Body.auto<List<Square>>().toLens()
+    fun fromResponse(response: Response) = bodyLens(response)
 }

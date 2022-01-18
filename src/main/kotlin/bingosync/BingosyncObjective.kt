@@ -15,9 +15,9 @@ object BingosyncObjective {
         val identiferPattern = Regex("""^[a-zA-Z]\w*$""")
         for (rawString in objectivePattern.findAll(contents).map { it.groupValues[1] }) {
             val javaString = StringEscapeUtils.unescapeJava(rawString)
-            var words = rawString
+            val words = rawString
                 .filter { char ->
-                    char.isLetterOrDigit() or char.isWhitespace()
+                    char.isLetterOrDigit() || char.isWhitespace()
                 }
                 .split(" ")
                 .map { word ->
@@ -25,9 +25,10 @@ object BingosyncObjective {
                         letter.uppercase()
                     }
                 }
+                .toMutableList()
             if (words.last() != "Advancement") {
-                words = words.filter { word ->
-                    !(word == "A" || word == "An" || word == "The")
+                words.removeAll { word ->
+                    word == "A" || word == "An" || word == "The"
                 }
             }
             if (words.first().all { it.isDigit() })
@@ -40,4 +41,4 @@ object BingosyncObjective {
     }
 }
 
-fun String.toObjective() = BingosyncObjective.map[this]
+fun String.toObjective() = BingosyncObjective.map.getValue(this)

@@ -15,6 +15,14 @@ class Board(private val state: State) {
         this.objectives = objectives
     }
 
+    fun getIndex(objective: Objective): Int = objectives.flatten().indexOf(objective)
+
+    fun getIndices(objective: Objective): Pair<Int, Int> {
+        val boardSize = state.settings.boardSize
+        val index = getIndex(objective)
+        return index.div(boardSize) to index.rem(boardSize)
+    }
+
     fun addListeners(player: Player) {
         for (objective in objectives.flatten()) {
             val listener = objective.addListener(state, player)
@@ -37,7 +45,7 @@ fun generateRandomBoard(state: State): Board {
     objectiveChoices.shuffle()
     val objectives = Array(boardSize) { i ->
         Array(boardSize) { j ->
-            objectiveChoices[i * boardSize + j]
+            objectiveChoices[boardSize * i + j]
         }
     }
     val board = Board(state)
