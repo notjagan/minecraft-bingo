@@ -2,7 +2,7 @@ package command
 
 import game.Game
 import game.InsufficientObjectivesException
-import game.createGame
+import game.createRandomGame
 import listener.PlayerJoinListener
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -23,7 +23,7 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 if (args.size > 1)
                     return false
                 try {
-                    game = createGame(plugin)
+                    game = createRandomGame(plugin)
                     Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(game!!), plugin)
                 } catch (e: InsufficientObjectivesException) {
                     sender.sendMessage("${ChatColor.RED}Insufficient unique objectives to generate board.")

@@ -19,7 +19,6 @@ enum class CellColor(
 
     companion object {
         private val map = CellColor.values().associateBy(CellColor::colorString)
-
         fun fromString(colorString: String) = map[colorString]
     }
 }

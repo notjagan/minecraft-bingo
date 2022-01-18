@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import org.http4k.format.Jackson.auto
+import org.http4k.websocket.WsMessage
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(
@@ -30,7 +28,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
         ]
     )
 )
-abstract class Message
+abstract class Message {
+    companion object {
+        private val wsMessageLens = WsMessage.auto<Message>().toLens()
+        fun fromWsMessage(wsMessage: WsMessage) = wsMessageLens(wsMessage)
+    }
+}
 
 data class ErrorMessage(
     @JsonProperty("error")
@@ -40,37 +43,7 @@ data class ErrorMessage(
 data class GoalMessage(
     @JsonProperty("square")
     private val square: Square
-) : Message() {
-    data class Square(
-        val name: String,
-        @JsonDeserialize(using = ColorsDeserializer::class)
-        val colors: HashSet<CellColor>,
-        @JsonDeserialize(using = SlotDeserializer::class)
-        val slot: Int
-    ) {
-        private class ColorsDeserializer : JsonDeserializer<HashSet<CellColor>>() {
-            override fun deserialize(parser: JsonParser, context: DeserializationContext): HashSet<CellColor> {
-                val colors = HashSet<CellColor>()
-                val colorsString = parser.valueAsString
-                if (colorsString == "blank") {
-                    return colors
-                }
-                for (colorString in colorsString.split(" "))
-                    colors.add(CellColor.fromString(colorString)!!)
-                return colors
-            }
-        }
-
-        private class SlotDeserializer : JsonDeserializer<Int>() {
-            override fun deserialize(parser: JsonParser, context: DeserializationContext): Int {
-                val slotString = parser.valueAsString
-                val match = Regex("slot(\\d{1,2})").find(slotString)!!
-                val (slotNumber) = match.destructured
-                return slotNumber.toInt()
-            }
-        }
-    }
-}
+) : Message()
 
 object NewCardMessage : Message()
 
