@@ -42,12 +42,12 @@ data class ErrorMessage(
 
 data class GoalMessage(
     @JsonProperty("square")
-    private val square: Square
+    val square: Square
 ) : Message()
 
 object NewCardMessage : Message()
 
 data class MiscellaneousMessage(
     @JsonProperty("type")
-    private val type: String
+    val type: String
 ) : Message()

@@ -1,10 +1,8 @@
 package command
 
 import bingosync.CellColor
-import game.ColorInUseException
-import game.Game
-import game.InsufficientObjectivesException
-import game.createRandomGame
+import bingosync.RoomJoinParameters
+import game.*
 import listener.PlayerJoinListener
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -65,6 +63,12 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                     }
                     else -> return false
                 }
+            }
+            "sync" -> {
+                val roomCode = args[1];
+                val password = args[2];
+                game = joinBingosyncGame(plugin, roomCode, password)
+                Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(game!!), plugin)
             }
             else -> return false
         }

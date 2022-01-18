@@ -2,7 +2,8 @@ package bingosync
 
 import com.fasterxml.jackson.annotation.*
 import game.Game
-import game.GoalUpdateHandler
+import game.GameUpdateHandler
+import org.bukkit.Bukkit
 import org.http4k.client.Java8HttpClient
 import org.http4k.client.WebsocketClient
 import org.http4k.core.*
@@ -13,7 +14,7 @@ import org.http4k.websocket.WsMessage
 import util.Constants
 import util.Objective
 
-class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, private val game: Game) : GoalUpdateHandler {
+class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, private val game: Game) : GameUpdateHandler {
     private val baseUri = Uri.of(Constants.BingosyncAddress)
     private val socketUri = Uri.of(Constants.BingosyncSocketAddress)
     private var socketParameters: SocketParameters
@@ -39,11 +40,12 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         websocketClient = WebsocketClient.nonBlocking(socketUri.extend(Uri.of("broadcast"))) {
             it.send(socketParameters.toWsMessage())
             squares = getSquares()
-            updateBoard()
+            updateGame()
         }
         websocketClient.onMessage { wsMessage ->
-            val message = Message.fromWsMessage(wsMessage)
-            println(message)
+            when (val message = Message.fromWsMessage(wsMessage)) {
+                is GoalMessage -> updateTracker(message.square)
+            }
         }
     }
 
@@ -73,7 +75,16 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         return Squares.fromResponse(response)
     }
 
-    private fun updateBoard() {
+    private fun updateTracker(square: Square) {
+        val objective = square.name.toObjective()
+        game.state.tracker.clearObjective(objective)
+        val playerNames = square.colors.mapNotNull(game.state.tracker::getPlayerForColor)
+        for (playerName in playerNames) {
+            game.state.tracker.markComplete(playerName, objective)
+        }
+    }
+
+    private fun updateGame() {
         val map = squares
             .associateBy(Square::slot)
             .mapValues {
@@ -85,12 +96,10 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
                 map.getValue(boardSize * i + j)
             }
         }
+        objectives.flatten().forEach(::println)
         game.board.setObjectives(objectives)
         for (square in squares) {
-            val playerNames = square.colors.map(game.state.tracker::getPlayerForColor)
-            for (playerName in playerNames) {
-                game.state.tracker.markComplete(playerName, square.name.toObjective())
-            }
+            updateTracker(square)
         }
     }
 
@@ -108,4 +117,6 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         ).body(goalUpdateParameters)
         handler(request)
     }
+
+    override fun handleNewPlayer(playerName: String) = updateGame()
 }

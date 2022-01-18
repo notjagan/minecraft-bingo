@@ -41,6 +41,6 @@ fun joinBingosyncGame(plugin: Plugin, roomCode: String, password: String): Game 
     val game = Game(state, board)
     val roomJoinParameters = RoomJoinParameters(roomCode, "admin", password)
     val client = BingosyncClient(roomJoinParameters, game)
-    tracker.goalUpdateHandler = client
+    tracker.updateHandler = client
     return game
 }

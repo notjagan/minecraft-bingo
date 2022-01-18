@@ -7,8 +7,8 @@ import kotlin.collections.HashMap
 
 class ColorInUseException() : Exception()
 
-class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
-    var goalUpdateHandler: GoalUpdateHandler? = null
+class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
+    var updateHandler: GameUpdateHandler? = null
 
     data class PlayerData(val objectives: EnumSet<Objective>, val color: CellColor)
 
@@ -17,6 +17,7 @@ class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
             throw ColorInUseException()
         }
         objectiveMap[playerName] = PlayerData(EnumSet.noneOf(Objective::class.java), color)
+        updateHandler?.handleNewPlayer(playerName)
     }
 
     fun trackPlayer(playerName: String) {
@@ -31,24 +32,29 @@ class PlayerTracker(private val objectiveMap: HashMap<String, PlayerData>) {
         if (!isTracking(playerName))
             trackPlayer(playerName)
         objectiveMap[playerName]?.objectives?.add(objective)
-        goalUpdateHandler?.handleGoalUpdate(playerName, objective, true)
+        updateHandler?.handleGoalUpdate(playerName, objective, true)
     }
 
     fun markNotComplete(playerName: String, objective: Objective) {
         if (!isTracking(playerName))
             trackPlayer(playerName)
         objectiveMap[playerName]?.objectives?.remove(objective)
-        goalUpdateHandler?.handleGoalUpdate(playerName, objective, false)
+        updateHandler?.handleGoalUpdate(playerName, objective, false)
     }
 
     fun isComplete(playerName: String, objective: Objective) =
         objectiveMap[playerName]?.objectives?.contains(objective) == true
 
+    fun clearObjective(objective: Objective) {
+        for (playerData in objectiveMap.values)
+            playerData.objectives.remove(objective)
+    }
+
     fun clearObjectives() = objectiveMap.clear()
 
     fun getColorForPlayer(playerName: String) = objectiveMap[playerName]!!.color
 
-    fun getPlayerForColor(color: CellColor) = objectiveMap.filter { it.value.color == color }.keys.first()
+    fun getPlayerForColor(color: CellColor) = objectiveMap.filter { it.value.color == color }.keys.firstOrNull()
 }
 
 fun createEmptyTracker(): PlayerTracker {
