@@ -1,6 +1,6 @@
 package game
 
-import bingosync.BingosyncClient
+import bingosync.CellColor
 import bingosync.RoomJoinParameters
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -15,16 +15,26 @@ class Game(val state: State, val board: Board) {
         }
         return false
     }
+
+    fun addPlayer(player: Player, color: CellColor): Boolean {
+        val playerName = player.name
+        if (!state.tracker.isTracking(playerName)) {
+            board.addListeners(player)
+            state.tracker.trackPlayer(playerName, color)
+            return true
+        }
+        return false
+    }
 }
 
 fun createRandomGame(plugin: Plugin): Game {
-    val state = State(plugin, ObjectiveTracker(), Settings())
+    val state = State(plugin, createEmptyTracker(), Settings())
     val board = generateRandomBoard(state)
     return Game(state, board)
 }
 
 fun joinBingosyncGame(plugin: Plugin, roomCode: String, password: String): Game {
-    val state = State(plugin, ObjectiveTracker(), Settings(boardSize = 5))
+    val state = State(plugin, createEmptyTracker(), Settings(boardSize = 5))
     val board = Board(state)
     val game = Game(state, board)
     val roomJoinParameters = RoomJoinParameters(roomCode, "admin", password)
