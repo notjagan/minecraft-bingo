@@ -6,16 +6,16 @@ enum class CellColor(
     @JsonValue
     val colorString: String
 ) {
-    ORANGE("orange"),
-    RED("red"),
-    BLUE("blue"),
-    GREEN("green"),
-    PURPLE("purple"),
-    NAVY("navy"),
-    TEAL("teal"),
-    BROWN("brown"),
-    PINK("pink"),
-    YELLOW("yellow");
+    Orange("orange"),
+    Red("red"),
+    Blue("blue"),
+    Green("green"),
+    Purple("purple"),
+    Navy("navy"),
+    Teal("teal"),
+    Brown("brown"),
+    Pink("pink"),
+    Yellow("yellow");
 
     companion object {
         private val map = CellColor.values().associateBy(CellColor::colorString)
