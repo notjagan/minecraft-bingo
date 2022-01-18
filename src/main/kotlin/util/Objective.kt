@@ -1,12 +1,13 @@
 package util
 
 import game.State
+import listener.NoOpListener
 import listener.ObjectiveListener
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 enum class Objective(val listenerFactory: (State, Objective, Player) -> ObjectiveListener) {
-    ;
+    Unknown(::NoOpListener);
 
     fun addListener(state: State, player: Player): ObjectiveListener {
         val listener = listenerFactory(state, this, player)
