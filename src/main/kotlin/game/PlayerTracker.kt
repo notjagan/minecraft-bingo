@@ -42,6 +42,12 @@ class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
         updateHandler?.handleGoalUpdate(playerName, objective, false)
     }
 
+    fun setPlayers(objective: Objective, playerNames: List<String>) {
+        clearObjective(objective)
+        for (playerName in playerNames)
+            objectiveMap[playerName]?.objectives?.add(objective)
+    }
+
     fun isComplete(playerName: String, objective: Objective) =
         objectiveMap[playerName]?.objectives?.contains(objective) == true
 

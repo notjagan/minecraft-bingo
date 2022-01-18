@@ -3,7 +3,6 @@ package bingosync
 import com.fasterxml.jackson.annotation.*
 import game.Game
 import game.GameUpdateHandler
-import org.bukkit.Bukkit
 import org.http4k.client.Java8HttpClient
 import org.http4k.client.WebsocketClient
 import org.http4k.core.*
@@ -77,11 +76,8 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
 
     private fun updateTracker(square: Square) {
         val objective = square.name.toObjective()
-        game.state.tracker.clearObjective(objective)
         val playerNames = square.colors.mapNotNull(game.state.tracker::getPlayerForColor)
-        for (playerName in playerNames) {
-            game.state.tracker.markComplete(playerName, objective)
-        }
+        game.state.tracker.setPlayers(objective, playerNames)
     }
 
     private fun updateGame() {
@@ -96,7 +92,6 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
                 map.getValue(boardSize * i + j)
             }
         }
-        objectives.flatten().forEach(::println)
         game.board.setObjectives(objectives)
         for (square in squares) {
             updateTracker(square)
@@ -108,8 +103,8 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         val goalUpdateParameters = GoalUpdateParameters(
             roomJoinParameters.roomCode,
             game.state.tracker.getColorForPlayer(playerName),
-            slot,
-            isComplete
+            slot + 1,
+            !isComplete
         )
         val request = Request(
             Method.PUT,
