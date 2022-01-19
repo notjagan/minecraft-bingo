@@ -15,6 +15,12 @@ object BingosyncObjective {
         val identiferPattern = Regex("""^[a-zA-Z]\w*$""")
         for (rawString in objectivePattern.findAll(contents).map { it.groupValues[1] }) {
             val javaString = StringEscapeUtils.unescapeJava(rawString)
+            // misspelled in bingosync source
+            if (javaString == "\"It It a Bird?\" advancement") {
+                val objective = Objective.values().find { it.name == "IsItABirdAdvancement" } ?: Objective.Unknown
+                map[javaString] = objective
+                continue
+            }
             val words = rawString
                 .filter { char ->
                     char.isLetterOrDigit() || char.isWhitespace()
