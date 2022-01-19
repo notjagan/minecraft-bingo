@@ -3,6 +3,7 @@ package bingosync
 import com.fasterxml.jackson.annotation.*
 import game.Game
 import game.GameUpdateHandler
+import org.bukkit.Bukkit
 import org.http4k.client.Java8HttpClient
 import org.http4k.client.WebsocketClient
 import org.http4k.core.*
@@ -39,11 +40,16 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         websocketClient = WebsocketClient.nonBlocking(socketUri.extend(Uri.of("broadcast"))) {
             it.send(socketParameters.toWsMessage())
             squares = getSquares()
-            updateGame()
+            syncGame()
         }
         websocketClient.onMessage { wsMessage ->
-            when (val message = Message.fromWsMessage(wsMessage)) {
-                is GoalMessage -> updateTracker(message.square)
+            try {
+                when (val message = Message.fromWsMessage(wsMessage)) {
+                    is GoalMessage -> updateTracker(message.square)
+                    is NewCardMessage -> updateGame()
+                }
+            } catch (e: Exception) {
+                Bukkit.getLogger().info(e.toString())
             }
         }
     }
@@ -80,7 +86,7 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         game.state.tracker.setPlayers(objective, playerNames)
     }
 
-    private fun updateGame() {
+    private fun syncGame() {
         val map = squares
             .associateBy(Square::slot)
             .mapValues {
@@ -93,9 +99,15 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
             }
         }
         game.board.setObjectives(objectives)
+        game.state.tracker.clearObjectives()
         for (square in squares) {
             updateTracker(square)
         }
+    }
+
+    private fun updateGame() {
+        squares = getSquares()
+        syncGame()
     }
 
     override fun handleGoalUpdate(playerName: String, objective: Objective, isComplete: Boolean) {
@@ -113,5 +125,5 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
         handler(request)
     }
 
-    override fun handleNewPlayer(playerName: String) = updateGame()
+    override fun handleNewPlayer(playerName: String) = syncGame()
 }

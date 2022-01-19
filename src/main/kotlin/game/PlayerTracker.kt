@@ -51,12 +51,15 @@ class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
     fun isComplete(playerName: String, objective: Objective) =
         objectiveMap[playerName]?.objectives?.contains(objective) == true
 
-    fun clearObjective(objective: Objective) {
+    private fun clearObjective(objective: Objective) {
         for (playerData in objectiveMap.values)
             playerData.objectives.remove(objective)
     }
 
-    fun clearObjectives() = objectiveMap.clear()
+    fun clearObjectives() {
+        for (playerData in objectiveMap.values)
+            playerData.objectives.clear()
+    }
 
     fun getColorForPlayer(playerName: String) = objectiveMap[playerName]!!.color
 

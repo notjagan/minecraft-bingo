@@ -24,7 +24,6 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                     return false
                 try {
                     game = createRandomGame(plugin)
-                    Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(game!!), plugin)
                 } catch (e: InsufficientObjectivesException) {
                     sender.sendMessage("${ChatColor.RED}Insufficient unique objectives to generate board.")
                 }
@@ -68,7 +67,6 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 val roomCode = args[1];
                 val password = args[2];
                 game = joinBingosyncGame(plugin, roomCode, password)
-                Bukkit.getServer().pluginManager.registerEvents(PlayerJoinListener(game!!), plugin)
             }
             else -> return false
         }
