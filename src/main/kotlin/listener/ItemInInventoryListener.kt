@@ -16,13 +16,17 @@ class ItemInInventoryListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onItemHeldEvent(event: PlayerItemHeldEvent) {
-        if (event.player.name == player.name && event.player.inventory.contains(material, amount))
+        if (event.player.uniqueId == player.uniqueId && event.player.inventory.contains(material, amount))
             updateObjectiveStatus()
     }
 
     companion object {
         fun factory(material: Material, amount: Int) = { state: State, objective: Objective, player: Player ->
             ItemInInventoryListener(state, objective, player, material, amount)
+        }
+
+        fun factory(material: Material) = { state: State, objective: Objective, player: Player ->
+            ItemInInventoryListener(state, objective, player, material, 1)
         }
     }
 }
