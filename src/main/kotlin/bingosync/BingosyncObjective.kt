@@ -7,7 +7,11 @@ import java.util.*
 import kotlin.collections.HashMap
 
 object BingosyncObjective {
-    val map: HashMap<String, Objective> = HashMap()
+    // initialized with manual override values
+    // (handles e.g. typos in the bingosync source)
+    val nameToObjective: HashMap<String, Objective> = hashMapOf(
+        "\"It It a Bird?\" advancement" to Objective.IsItABirdAdvancement
+    )
 
     init {
         val contents = BingosyncObjective::class.java.getResource(Constants.GeneratorPath)!!.readText()
@@ -15,12 +19,8 @@ object BingosyncObjective {
         val identiferPattern = Regex("""^[a-zA-Z]\w*$""")
         for (rawString in objectivePattern.findAll(contents).map { it.groupValues[1] }) {
             val javaString = StringEscapeUtils.unescapeJava(rawString)
-            // misspelled in bingosync source
-            if (javaString == "\"It It a Bird?\" advancement") {
-                val objective = Objective.values().find { it.name == "IsItABirdAdvancement" } ?: Objective.Unknown
-                map[javaString] = objective
+            if (javaString in nameToObjective)
                 continue
-            }
             val words = rawString
                 .filter { char ->
                     char.isLetterOrDigit() || char.isWhitespace()
@@ -42,9 +42,9 @@ object BingosyncObjective {
             val objectiveName = words.joinToString("")
             assert(identiferPattern.matches(objectiveName))
             val objective = Objective.values().find { it.name == objectiveName } ?: Objective.Unknown
-            map[javaString] = objective
+            nameToObjective[javaString] = objective
         }
     }
 }
 
-fun String.toObjective() = BingosyncObjective.map.getValue(this)
+fun String.toObjective() = BingosyncObjective.nameToObjective.getValue(this)
