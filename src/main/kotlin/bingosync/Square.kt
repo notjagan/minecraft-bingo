@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.http4k.core.Body
 import org.http4k.core.Response
 import org.http4k.format.Jackson.auto
-import org.http4k.websocket.WsMessage
 
 data class Square(
     val name: String,
