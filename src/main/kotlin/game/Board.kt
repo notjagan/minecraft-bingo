@@ -31,9 +31,8 @@ class Board(private val state: State) {
     }
 
     fun clearListeners() {
-        for (listener in listeners) {
+        for (listener in listeners)
             HandlerList.unregisterAll(listener)
-        }
     }
 }
 

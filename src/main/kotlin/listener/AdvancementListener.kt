@@ -1,8 +1,6 @@
 package listener
 
 import game.State
-import org.bukkit.Material
-import org.bukkit.advancement.Advancement
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
@@ -17,7 +15,7 @@ class AdvancementListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (event.player.name == player.name && event.advancement.key.key == advancementName)
+        if (event.player.uniqueId == player.uniqueId && event.advancement.key.key == advancementName)
             updateObjectiveStatus()
     }
 

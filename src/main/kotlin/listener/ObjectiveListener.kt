@@ -3,7 +3,6 @@ package listener
 import game.State
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.Event
 import org.bukkit.event.Listener
 import util.Objective
 
