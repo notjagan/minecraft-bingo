@@ -5,7 +5,7 @@ import util.Objective
 import java.util.EnumSet
 import kotlin.collections.HashMap
 
-class ColorInUseException() : Exception()
+class ColorInUseException : Exception()
 
 class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
     var updateHandler: GameUpdateHandler? = null

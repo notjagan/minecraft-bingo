@@ -6,8 +6,4 @@ class Bingo : JavaPlugin() {
         super.onEnable()
         getCommand("bingo")?.setExecutor(BingoCommandExecutor(this))
     }
-
-    override fun onDisable() {
-        super.onDisable()
-    }
 }

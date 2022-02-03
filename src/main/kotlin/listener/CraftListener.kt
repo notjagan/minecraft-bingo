@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.CraftItemEvent
 import util.Objective
+import util.matches
 
 class CraftListener(
     state: State,
@@ -15,7 +16,7 @@ class CraftListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onCraft(event: CraftItemEvent) {
-        if (event.recipe.result.type == material && event.whoClicked.uniqueId == player.uniqueId)
+        if (event.recipe.result.type == material && event.whoClicked matches player)
             updateObjectiveStatus()
     }
 

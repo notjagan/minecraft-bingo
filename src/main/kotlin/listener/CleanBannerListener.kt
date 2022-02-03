@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.CauldronLevelChangeEvent
 import util.Objective
+import util.matches
 
 class CleanBannerListener(
     state: State,
@@ -13,7 +14,7 @@ class CleanBannerListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onCauldronLevelChange(event: CauldronLevelChangeEvent) {
-        if (event.reason == CauldronLevelChangeEvent.ChangeReason.BANNER_WASH && event.entity?.uniqueId == player.uniqueId)
+        if (event.reason == CauldronLevelChangeEvent.ChangeReason.BANNER_WASH && event.entity matches player)
             updateObjectiveStatus()
     }
 }

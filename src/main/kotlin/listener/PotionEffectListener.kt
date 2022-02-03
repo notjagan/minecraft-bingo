@@ -4,9 +4,9 @@ import game.State
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityPotionEffectEvent
-import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.potion.PotionEffectType
 import util.Objective
+import util.matches
 
 class PotionEffectListener(
     state: State,
@@ -16,7 +16,7 @@ class PotionEffectListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onPotionEffect(event: EntityPotionEffectEvent) {
-        if (event.newEffect?.type == effectType && event.entity.uniqueId == player.uniqueId)
+        if (event.newEffect?.type == effectType && event.entity matches player)
             updateObjectiveStatus()
     }
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import util.Objective
+import util.matches
 
 class KillListener(
     state: State,
@@ -15,7 +16,7 @@ class KillListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onKill(event: EntityDeathEvent) {
-        if (event.entity.type == entityType && event.entity.killer?.uniqueId == player.uniqueId)
+        if (event.entity.type == entityType && event.entity.killer matches player)
             updateObjectiveStatus()
     }
 

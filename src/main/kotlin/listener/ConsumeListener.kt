@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import util.Objective
+import util.matches
 
 class ConsumeListener(
     state: State,
@@ -15,7 +16,7 @@ class ConsumeListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onEat(event: PlayerItemConsumeEvent) {
-        if (event.item.type == item && event.player.uniqueId == player.uniqueId)
+        if (event.item.type == item && event.player matches player)
             updateObjectiveStatus()
     }
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockPlaceEvent
 import util.Objective
+import util.matches
 
 class PlaceListener(
     state: State,
@@ -15,7 +16,7 @@ class PlaceListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onPlace(event: BlockPlaceEvent) {
-        if (event.block.type == block && event.player.uniqueId == player.uniqueId)
+        if (event.block.type == block && event.player matches player)
             updateObjectiveStatus()
     }
 

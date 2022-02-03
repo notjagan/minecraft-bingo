@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerItemHeldEvent
 import util.Objective
+import util.matches
 
 class ItemInInventoryListener(
     state: State,
@@ -16,7 +17,7 @@ class ItemInInventoryListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onItemHeldEvent(event: PlayerItemHeldEvent) {
-        if (event.player.uniqueId == player.uniqueId && event.player.inventory.contains(material, amount))
+        if (event.player matches player && event.player.inventory.contains(material, amount))
             updateObjectiveStatus()
     }
 

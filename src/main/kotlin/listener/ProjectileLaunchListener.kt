@@ -3,10 +3,10 @@ package listener
 import game.State
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import util.Objective
+import util.matches
 
 class ProjectileLaunchListener(
     state: State,
@@ -17,7 +17,7 @@ class ProjectileLaunchListener(
     @EventHandler
     fun onLaunch(event: ProjectileLaunchEvent) {
         val shooter = event.entity.shooter
-        if (event.entity.type == projectile && shooter is Player && shooter.uniqueId == player.uniqueId)
+        if (event.entity.type == projectile && shooter is Player && shooter matches player)
             updateObjectiveStatus()
     }
 

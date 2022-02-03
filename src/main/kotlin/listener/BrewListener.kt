@@ -1,17 +1,15 @@
 package listener
 
 import game.State
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.BrewEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.BrewerInventory
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionType
 import util.Objective
+import util.matches
+import util.contains
 
 class BrewListener(
     state: State,
@@ -22,17 +20,13 @@ class BrewListener(
     @EventHandler
     fun onInventoryOpen(event: InventoryOpenEvent) {
         val inventory = event.inventory
-        if (
-            inventory is BrewerInventory &&
-            event.player.uniqueId == player.uniqueId &&
-            inventory.hasPotionType(potionType)
-        )
+        if (inventory is BrewerInventory && event.player matches player && potionType in inventory)
             updateObjectiveStatus()
     }
 
     @EventHandler
     fun onBrew(event: BrewEvent) {
-        if (event.contents.viewers.any { it.uniqueId == player.uniqueId } && event.results.hasPotionType(potionType))
+        if (event.contents.viewers.any { it matches player } && potionType in event.results)
             updateObjectiveStatus()
     }
 
@@ -41,9 +35,4 @@ class BrewListener(
             BrewListener(state, objective, player, potionType)
         }
     }
-}
-
-fun Iterable<ItemStack>.hasPotionType(potionType: PotionType) = this.any { stack ->
-    val meta = stack.itemMeta
-    meta is PotionMeta && meta.basePotionData.type == potionType
 }

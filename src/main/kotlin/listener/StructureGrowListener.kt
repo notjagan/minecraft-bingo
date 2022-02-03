@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.world.StructureGrowEvent
 import util.Objective
+import util.matches
 
 class StructureGrowListener(
     state: State,
@@ -15,7 +16,7 @@ class StructureGrowListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onStructureGrow(event: StructureGrowEvent) {
-        if (event.species == species && event.player?.uniqueId == player.uniqueId)
+        if (event.species == species && event.player matches player)
             updateObjectiveStatus()
     }
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityTameEvent
 import util.Objective
+import util.matches
 
 class TameListener(
     state: State,
@@ -15,7 +16,8 @@ class TameListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onTame(event: EntityTameEvent) {
-        if (event.entity.type == entityType && event.owner.uniqueId == player.uniqueId)
+        val owner = event.owner
+        if (event.entity.type == entityType && owner is Player && owner matches player)
             updateObjectiveStatus()
     }
 

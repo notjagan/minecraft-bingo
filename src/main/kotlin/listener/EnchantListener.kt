@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.enchantment.EnchantItemEvent
 import util.Objective
+import util.matches
 
 class EnchantListener(
     state: State,
@@ -15,7 +16,7 @@ class EnchantListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onEnchant(event: EnchantItemEvent) {
-        if (event.item.type == item && event.enchanter.uniqueId == player.uniqueId)
+        if (event.item.type == item && event.enchanter matches player)
             updateObjectiveStatus()
     }
 

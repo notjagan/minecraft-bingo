@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerLevelChangeEvent
 import util.Objective
+import util.matches
 
 class LevelChangeListener(
     state: State,
@@ -14,7 +15,7 @@ class LevelChangeListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onLevelChange(event: PlayerLevelChangeEvent) {
-        if (event.player.uniqueId == player.uniqueId && event.newLevel >= level)
+        if (event.player matches player && event.newLevel >= level)
             updateObjectiveStatus()
     }
 

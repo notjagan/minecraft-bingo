@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
 import util.Objective
+import util.matches
 
 
 class AdvancementListener(
@@ -15,7 +16,7 @@ class AdvancementListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (event.player.uniqueId == player.uniqueId && event.advancement.key.key == advancementName)
+        if (event.player matches player && event.advancement.key.key == advancementName)
             updateObjectiveStatus()
     }
 

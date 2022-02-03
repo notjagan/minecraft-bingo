@@ -16,7 +16,7 @@ object BingosyncObjective {
     init {
         val contents = BingosyncObjective::class.java.getResource(Constants.GeneratorPath)!!.readText()
         val objectivePattern = Regex("""^\s*"(.*)",?$""", RegexOption.MULTILINE)
-        val identiferPattern = Regex("""^[a-zA-Z]\w*$""")
+        val identifierPattern = Regex("""^[a-zA-Z]\w*$""")
         for (rawString in objectivePattern.findAll(contents).map { it.groupValues[1] }) {
             val javaString = StringEscapeUtils.unescapeJava(rawString)
             if (javaString in nameToObjective)
@@ -40,7 +40,7 @@ object BingosyncObjective {
             if (words.first().all { it.isDigit() })
                 Collections.rotate(words, -1)
             val objectiveName = words.joinToString("")
-            assert(identiferPattern.matches(objectiveName))
+            assert(identifierPattern.matches(objectiveName))
             val objective = Objective.values().find { it.name == objectiveName } ?: Objective.Unknown
             nameToObjective[javaString] = objective
         }

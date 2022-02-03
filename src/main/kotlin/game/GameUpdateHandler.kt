@@ -1,6 +1,5 @@
 package game
 
-import bingosync.CellColor
 import util.Objective
 
 interface GameUpdateHandler {

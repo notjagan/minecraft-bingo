@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.format.Jackson.auto
-import org.http4k.lens.BiDiBodyLens
 
 abstract class RoomRequestParameters(
     open val roomCode: String

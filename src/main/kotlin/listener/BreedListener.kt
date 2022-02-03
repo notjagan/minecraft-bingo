@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityBreedEvent
 import util.Objective
+import util.matches
 
 class BreedListener(
     state: State,
@@ -15,7 +16,7 @@ class BreedListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onBreed(event: EntityBreedEvent) {
-        if (event.entity.type == entityType && event.breeder?.uniqueId == player.uniqueId)
+        if (event.entity.type == entityType && event.breeder matches player)
             updateObjectiveStatus()
     }
 

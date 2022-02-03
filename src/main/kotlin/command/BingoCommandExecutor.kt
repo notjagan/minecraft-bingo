@@ -1,9 +1,7 @@
 package command
 
 import bingosync.CellColor
-import bingosync.RoomJoinParameters
 import game.*
-import listener.PlayerJoinListener
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -64,8 +62,8 @@ class BingoCommandExecutor(private val plugin: Plugin) : CommandExecutor {
                 }
             }
             "sync" -> {
-                val roomCode = args[1];
-                val password = args[2];
+                val roomCode = args[1]
+                val password = args[2]
                 game = joinBingosyncGame(plugin, roomCode, password)
             }
             else -> return false

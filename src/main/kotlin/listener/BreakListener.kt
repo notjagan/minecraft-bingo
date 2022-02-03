@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import util.Objective
+import util.matches
 
 class BreakListener(
     state: State,
@@ -15,7 +16,7 @@ class BreakListener(
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onMine(event: BlockBreakEvent) {
-        if (event.block.type == block && event.player.uniqueId == player.uniqueId)
+        if (event.block.type == block && event.player matches player)
             updateObjectiveStatus()
     }
 
