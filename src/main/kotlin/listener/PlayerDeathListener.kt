@@ -16,4 +16,10 @@ class PlayerDeathListener(
         if (event.entity.uniqueId == player.uniqueId)
             updateObjectiveStatus()
     }
+
+    companion object {
+        fun factory() = { state: State, objective: Objective, player: Player ->
+            PlayerDeathListener(state, objective, player)
+        }
+    }
 }
