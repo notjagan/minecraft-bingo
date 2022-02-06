@@ -14,16 +14,15 @@ import org.bukkit.potion.PotionType
 
 infix fun Entity?.matches(other: Entity) = this?.uniqueId == other.uniqueId
 
-operator fun Iterable<ItemStack>.contains(potionType: PotionType) = this.any { stack ->
-    val meta = stack.itemMeta
-    meta is PotionMeta && meta.basePotionData.type == potionType
+operator fun Iterable<ItemStack>.contains(potionType: PotionType) = this.any {
+    (it.itemMeta as? PotionMeta)?.basePotionData?.type == potionType
 }
 
 operator fun StructureType.contains(player: Player): Boolean {
     val location = player.location
     val structureLocation = player.world.locateNearestStructure(location, this.type, 200, false) ?: return false
     val chunk = (player.world.getChunkAt(structureLocation) as CraftChunk).handle
-    val pieces = chunk.a(StructureGenerator.b[type.name.lowercase()])?.i() ?: return false
+    val pieces = chunk.a(StructureGenerator.b[name.lowercase()])?.i() ?: return false
     val position = BaseBlockPosition(location.x, location.y, location.z)
     if (pieces.any { it.f().b(position) }) {
         if (this is VillageType) {
