@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import util.Objective
 import util.matches
 
-class PlaceListener(
+class BlockPlaceListener(
     state: State,
     objective: Objective,
     private val player: Player,
@@ -22,7 +22,7 @@ class PlaceListener(
 
     companion object {
         fun factory(block: Material) = { state: State, objective: Objective, player: Player ->
-            PlaceListener(state, objective, player, block)
+            BlockPlaceListener(state, objective, player, block)
         }
     }
 }

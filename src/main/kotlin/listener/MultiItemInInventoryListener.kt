@@ -14,7 +14,7 @@ class MultiItemInInventoryListener(
     objective: Objective,
     private val player: Player,
     private val materials: Array<Material>,
-    private val count: UniqueCount = UniqueCount.All
+    private val count: UniqueCount
 ) : ObjectiveListener(state, objective, player) {
     @EventHandler
     fun onItemHeldEvent(event: PlayerItemHeldEvent) {
@@ -30,7 +30,7 @@ class MultiItemInInventoryListener(
     }
 
     companion object {
-        fun factory(material: Array<Material>, count: UniqueCount) =
+        fun factory(material: Array<Material>, count: UniqueCount = UniqueCount.All) =
             { state: State, objective: Objective, player: Player ->
                 MultiItemInInventoryListener(state, objective, player, material, count)
             }

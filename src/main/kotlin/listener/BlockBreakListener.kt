@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import util.Objective
 import util.matches
 
-class BreakListener(
+class BlockBreakListener(
     state: State,
     objective: Objective,
     private val player: Player,
@@ -22,7 +22,7 @@ class BreakListener(
 
     companion object {
         fun factory(block: Material) = { state: State, objective: Objective, player: Player ->
-            BreakListener(state, objective, player, block)
+            BlockBreakListener(state, objective, player, block)
         }
     }
 }
