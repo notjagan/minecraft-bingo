@@ -27,15 +27,14 @@ operator fun StructureType.contains(player: Player): Boolean {
     if (pieces.any { it.f().b(position) }) {
         if (this is VillageType) {
             val pattern = Regex("""minecraft:village/([^/]*)""")
-            fun String.filterCommon() = if (this == "common") null else this
-            val villageBiome = pieces.firstNotNullOfOrNull {
-                ((it as? WorldGenFeaturePillagerOutpostPoolPiece)
+            val villageBiome = pieces.firstNotNullOfOrNull { piece ->
+                ((piece as? WorldGenFeaturePillagerOutpostPoolPiece)
                     ?.b() as? WorldGenFeatureDefinedStructurePoolSingle)
                     ?.toString()
-                    ?.let(pattern::find)
+                    ?.let { pattern.find(it) }
                     ?.destructured
                     ?.component1()
-                    ?.filterCommon()
+                    ?.takeUnless { it == "common" }
             }
             return villageBiome == biome
         }
