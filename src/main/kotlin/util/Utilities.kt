@@ -8,15 +8,8 @@ import org.bukkit.block.Biome
 import org.bukkit.craftbukkit.v1_18_R1.CraftChunk
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.potion.PotionType
 
 infix fun Entity?.matches(other: Entity) = this?.uniqueId == other.uniqueId
-
-operator fun Iterable<ItemStack>.contains(potionType: PotionType) = this.any {
-    (it.itemMeta as? PotionMeta)?.basePotionData?.type == potionType
-}
 
 operator fun StructureType.contains(player: Player): Boolean {
     val location = player.location
