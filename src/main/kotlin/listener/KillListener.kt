@@ -13,12 +13,8 @@ class KillListener(
     objective: Objective,
     private val player: Player,
     private val entityType: EntityType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onKill(event: EntityDeathEvent) {
-        if (event.entity.type == entityType && event.entity.killer matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<EntityDeathEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: EntityDeathEvent) = event.entity.type == entityType && event.entity.killer matches player
 
     companion object {
         fun factory(entityType: EntityType) = { state: State, objective: Objective, player: Player ->

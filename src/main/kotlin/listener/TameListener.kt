@@ -13,12 +13,10 @@ class TameListener(
     objective: Objective,
     private val player: Player,
     private val entityType: EntityType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onTame(event: EntityTameEvent) {
+) : ObjectiveListener<EntityTameEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: EntityTameEvent): Boolean {
         val owner = event.owner
-        if (event.entity.type == entityType && owner is Player && owner matches player)
-            updateObjectiveStatus()
+        return event.entity.type == entityType && owner is Player && owner matches player
     }
 
     companion object {

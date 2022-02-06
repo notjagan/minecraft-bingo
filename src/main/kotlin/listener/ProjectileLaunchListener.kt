@@ -13,12 +13,10 @@ class ProjectileLaunchListener(
     objective: Objective,
     private val player: Player,
     private val projectile: EntityType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onLaunch(event: ProjectileLaunchEvent) {
+) : ObjectiveListener<ProjectileLaunchEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: ProjectileLaunchEvent): Boolean {
         val shooter = event.entity.shooter
-        if (event.entity.type == projectile && shooter is Player && shooter matches player)
-            updateObjectiveStatus()
+        return event.entity.type == projectile && shooter is Player && shooter matches player
     }
 
     companion object {

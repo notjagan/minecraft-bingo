@@ -13,12 +13,8 @@ class BlockPlaceListener(
     objective: Objective,
     private val player: Player,
     private val block: Material
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onPlace(event: BlockPlaceEvent) {
-        if (event.block.type == block && event.player matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<BlockPlaceEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: BlockPlaceEvent) = event.block.type == block && event.player matches player
 
     companion object {
         fun factory(block: Material) = { state: State, objective: Objective, player: Player ->

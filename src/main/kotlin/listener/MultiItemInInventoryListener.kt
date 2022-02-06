@@ -15,18 +15,16 @@ class MultiItemInInventoryListener(
     private val player: Player,
     private val materials: Array<Material>,
     private val count: UniqueCount
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onItemHeldEvent(event: PlayerItemHeldEvent) {
+) : ObjectiveListener<PlayerItemHeldEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerItemHeldEvent): Boolean {
         if (event.player matches player) {
             val inventory = event.player.inventory
-            if (when (count) {
-                    is UniqueCount.Num -> count <= materials.count(inventory::contains)
-                    is UniqueCount.All -> materials.all(inventory::contains)
-                }
-            )
-                updateObjectiveStatus()
+            return when (count) {
+                is UniqueCount.Num -> count <= materials.count(inventory::contains)
+                is UniqueCount.All -> materials.all(inventory::contains)
+            }
         }
+        return false
     }
 
     companion object {

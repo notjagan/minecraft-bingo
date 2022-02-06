@@ -14,12 +14,8 @@ class ItemInInventoryListener(
     private val player: Player,
     private val material: Material,
     private val amount: Int
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onItemHeldEvent(event: PlayerItemHeldEvent) {
-        if (event.player matches player && event.player.inventory.contains(material, amount))
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerItemHeldEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerItemHeldEvent) = event.player matches player && event.player.inventory.contains(material, amount)
 
     companion object {
         fun factory(material: Material, amount: Int) = { state: State, objective: Objective, player: Player ->

@@ -12,12 +12,8 @@ class LevelChangeListener(
     objective: Objective,
     private val player: Player,
     private val level: Int
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onLevelChange(event: PlayerLevelChangeEvent) {
-        if (event.player matches player && event.newLevel >= level)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerLevelChangeEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerLevelChangeEvent) = event.player matches player && event.newLevel >= level
 
     companion object {
         fun factory(level: Int) = { state: State, objective: Objective, player: Player ->

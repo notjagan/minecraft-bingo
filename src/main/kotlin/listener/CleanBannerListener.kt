@@ -11,10 +11,6 @@ class CleanBannerListener(
     state: State,
     objective: Objective,
     private val player: Player
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onCauldronLevelChange(event: CauldronLevelChangeEvent) {
-        if (event.reason == CauldronLevelChangeEvent.ChangeReason.BANNER_WASH && event.entity matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<CauldronLevelChangeEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: CauldronLevelChangeEvent) = event.reason == CauldronLevelChangeEvent.ChangeReason.BANNER_WASH && event.entity matches player
 }

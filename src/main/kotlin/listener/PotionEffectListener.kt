@@ -13,12 +13,8 @@ class PotionEffectListener(
     objective: Objective,
     private val player: Player,
     private val effectType: PotionEffectType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onPotionEffect(event: EntityPotionEffectEvent) {
-        if (event.newEffect?.type == effectType && event.entity matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<EntityPotionEffectEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: EntityPotionEffectEvent) = event.newEffect?.type == effectType && event.entity matches player
 
     companion object {
         fun factory(effectType: PotionEffectType) = { state: State, objective: Objective, player: Player ->

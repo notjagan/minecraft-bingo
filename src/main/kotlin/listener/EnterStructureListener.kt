@@ -14,12 +14,8 @@ class EnterStructureListener(
     objective: Objective,
     private val player: Player,
     private val structureType: StructureType,
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onEnterStructure(event: PlayerMoveEvent) {
-        if (event.player matches player && player in structureType)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerMoveEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerMoveEvent) = event.player matches player && player in structureType
 
     companion object {
         fun factory(structureType: StructureType) = { state: State, objective: Objective, player: Player ->

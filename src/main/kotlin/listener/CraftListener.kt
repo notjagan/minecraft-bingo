@@ -13,12 +13,8 @@ class CraftListener(
     objective: Objective,
     private val player: Player,
     private val material: Material
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onCraft(event: CraftItemEvent) {
-        if (event.recipe.result.type == material && event.whoClicked matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<CraftItemEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: CraftItemEvent) = event.recipe.result.type == material && event.whoClicked matches player
 
     companion object {
         fun factory(material: Material) = { state: State, objective: Objective, player: Player ->

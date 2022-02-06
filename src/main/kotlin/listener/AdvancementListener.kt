@@ -13,12 +13,8 @@ class AdvancementListener(
     objective: Objective,
     private val player: Player,
     private val advancementName: String
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (event.player matches player && event.advancement.key.key == advancementName)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerAdvancementDoneEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerAdvancementDoneEvent) = event.player matches player && event.advancement.key.key == advancementName
 
     companion object {
         fun factory(advancementName: String) = { state: State, objective: Objective, player: Player ->

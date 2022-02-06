@@ -13,12 +13,8 @@ class ConsumeListener(
     objective: Objective,
     private val player: Player,
     private val item: Material
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onEat(event: PlayerItemConsumeEvent) {
-        if (event.item.type == item && event.player matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerItemConsumeEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerItemConsumeEvent) = event.item.type == item && event.player matches player
 
     companion object {
         fun factory(item: Material) = { state: State, objective: Objective, player: Player ->

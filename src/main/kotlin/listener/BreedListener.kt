@@ -13,12 +13,8 @@ class BreedListener(
     objective: Objective,
     private val player: Player,
     private val entityType: EntityType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onBreed(event: EntityBreedEvent) {
-        if (event.entity.type == entityType && event.breeder matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<EntityBreedEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: EntityBreedEvent) = event.entity.type == entityType && event.breeder matches player
 
     companion object {
         fun factory(entityType: EntityType) = { state: State, objective: Objective, player: Player ->

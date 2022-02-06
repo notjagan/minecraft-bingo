@@ -13,12 +13,8 @@ class EnchantListener(
     objective: Objective,
     private val player: Player,
     private val item: Material
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onEnchant(event: EnchantItemEvent) {
-        if (event.item.type == item && event.enchanter matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<EnchantItemEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: EnchantItemEvent) = event.item.type == item && event.enchanter matches player
 
     companion object {
         fun factory(item: Material) = { state: State, objective: Objective, player: Player ->

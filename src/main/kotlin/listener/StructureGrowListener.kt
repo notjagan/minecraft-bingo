@@ -13,12 +13,8 @@ class StructureGrowListener(
     objective: Objective,
     private val player: Player,
     private val species: TreeType
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onStructureGrow(event: StructureGrowEvent) {
-        if (event.species == species && event.player matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<StructureGrowEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: StructureGrowEvent) = event.species == species && event.player matches player
 
     companion object {
         fun factory(treeType: TreeType) = { state: State, objective: Objective, player: Player ->

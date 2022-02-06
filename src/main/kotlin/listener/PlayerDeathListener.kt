@@ -11,12 +11,8 @@ class PlayerDeathListener(
     state: State,
     objective: Objective,
     private val player: Player
-) : ObjectiveListener(state, objective, player) {
-    @EventHandler
-    fun onPlayerDeath(event: PlayerDeathEvent) {
-        if (event.entity matches player)
-            updateObjectiveStatus()
-    }
+) : ObjectiveListener<PlayerDeathEvent>(state, objective, player) {
+    override fun isObjectiveComplete(event: PlayerDeathEvent) = event.entity matches player
 
     companion object {
         fun factory() = { state: State, objective: Objective, player: Player ->
