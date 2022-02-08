@@ -9,6 +9,7 @@ import org.bukkit.StructureType
 import org.bukkit.TreeType
 import org.bukkit.entity.*
 import org.bukkit.event.Listener
+import org.bukkit.loot.LootTables
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
@@ -479,8 +480,8 @@ enum class Objective(val listenerFactory: (State, Objective, Player) -> Listener
     LightCreeperWithFlintSteel,
     LightTntWithFlintSteel,
     LightTntWithRedstone,
-    LootBuriedTreasure,
-    LootRuinedPortalChest,
+    LootBuriedTreasure(LootableListener.factory(LootTables.BURIED_TREASURE)),
+    LootRuinedPortalChest(LootableListener.factory(LootTables.RUINED_PORTAL)),
     MakeEfficiency5Tool,
     MakePower5Bow,
     MakeSharpness5Sword,
