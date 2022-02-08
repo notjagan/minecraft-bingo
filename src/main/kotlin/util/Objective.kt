@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.StructureType
 import org.bukkit.TreeType
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
 import org.bukkit.event.Listener
 import org.bukkit.loot.LootTables
@@ -482,9 +483,9 @@ enum class Objective(val listenerFactory: (State, Objective, Player) -> Listener
     LightTntWithRedstone,
     LootBuriedTreasure(LootableListener.factory(LootTables.BURIED_TREASURE)),
     LootRuinedPortalChest(LootableListener.factory(LootTables.RUINED_PORTAL)),
-    MakeEfficiency5Tool,
-    MakePower5Bow,
-    MakeSharpness5Sword,
+    MakeEfficiency5Tool(PlayerUpdateEnchantmentListener.factory(Enchantment.DIG_SPEED, 5)),
+    MakePower5Bow(PlayerUpdateEnchantmentListener.factory(Enchantment.ARROW_DAMAGE, 5)),
+    MakeSharpness5Sword(PlayerUpdateEnchantmentListener.factory(Enchantment.DAMAGE_ALL, 5)),
     MakeWitchPoisonItself,
     MineAncientDebris(BlockBreakListener.factory(Material.ANCIENT_DEBRIS)),
     MineCoalOre(BlockBreakListener.factory(Material.COAL_ORE)),

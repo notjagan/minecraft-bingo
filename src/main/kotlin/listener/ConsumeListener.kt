@@ -14,7 +14,8 @@ class ConsumeListener(
     private val player: Player,
     private val item: Material
 ) : ObjectiveListener<PlayerItemConsumeEvent>(state, objective, player) {
-    override fun isObjectiveComplete(event: PlayerItemConsumeEvent) = event.item.type == item && event.player matches player
+    override fun isObjectiveComplete(event: PlayerItemConsumeEvent) =
+        event.item.type == item && event.player matches player
 
     companion object {
         fun factory(item: Material) = { state: State, objective: Objective, player: Player ->

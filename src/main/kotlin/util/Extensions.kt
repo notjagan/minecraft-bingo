@@ -12,10 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.metadata.Metadatable
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.potion.PotionType
 import kotlin.reflect.typeOf
-
-typealias BrewHistory = MutableSet<PotionType>
 
 infix fun Entity?.matches(other: Entity) = this?.uniqueId == other.uniqueId
 
