@@ -2,15 +2,17 @@ package event
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.BrewEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.BlockInventoryHolder
+import org.bukkit.inventory.BrewerInventory
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.Plugin
-import util.BrewingStandHistory
+import org.bukkit.potion.PotionType
+import util.BrewHistory
+import util.get
+import util.set
 
 @Suppress("unused")
 class PlayerBrewEventEmitter(plugin: Plugin) : Emitter<PlayerBrewEvent>(
@@ -19,40 +21,28 @@ class PlayerBrewEventEmitter(plugin: Plugin) : Emitter<PlayerBrewEvent>(
         val potions = event.results.mapNotNull {
             (it.itemMeta as? PotionMeta)?.basePotionData?.type
         }
-        val metadata = event.block.getMetadata(plugin, KEY)
-        val history = mapper.readValue<BrewingStandHistory>(metadata ?: emptyList)
+        val metadata = event.block[KEY] ?: emptyList
+        val history = mapper.readValue<BrewHistory>(metadata)
         history.addAll(potions)
-        event.block.setMetadata(KEY, FixedMetadataValue(plugin, mapper.writeValueAsString(history)))
-        event.contents.viewers
-            .mapNotNull { it as? Player }
-            .map { player ->
-                PlayerBrewEvent(player, potions)
-            }
+        event.block[KEY] = mapper.writeValueAsString(history)
+        event.contents.viewers.mapNotNull {
+            (it as? Player)?.let { player -> PlayerBrewEvent(player, potions) }
+        }
     },
     Propagator { event: InventoryOpenEvent ->
         val holder = event.inventory.holder
-        run {
-            if (holder is BlockInventoryHolder) {
-                val block = holder.block
-                val metadata = block.getMetadata(plugin, KEY) ?: return@run
-                val history = mapper.readValue<BrewingStandHistory>(metadata)
-                val player = event.player as? Player ?: return@run
-                return@Propagator listOf(PlayerBrewEvent(player, history.potions))
-            }
-        }
-        listOf()
+        if (event.inventory is BrewerInventory && holder is BlockInventoryHolder) {
+            val block = holder.block
+            val metadata = block[KEY] ?: emptyList
+            val history = mapper.readValue<BrewHistory>(metadata)
+            listOfNotNull((event.player as? Player)?.let { PlayerBrewEvent(it, history) })
+        } else
+            listOf()
     }
 ) {
     companion object {
         const val KEY = "history"
         val mapper = jacksonObjectMapper()
-        val emptyList = mapper.writeValueAsString(BrewingStandHistory(hashSetOf()))!!
-
-        fun Block.getMetadata(plugin: Plugin, key: String) = getMetadata(key)
-            .firstNotNullOfOrNull {
-                it.takeIf {
-                    it.owningPlugin == plugin
-                }
-            }?.asString()
+        val emptyList = mapper.writeValueAsString(hashSetOf<PotionType>())!!
     }
 }
