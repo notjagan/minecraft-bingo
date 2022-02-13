@@ -2,8 +2,7 @@ package game
 
 import bingosync.CellColor
 import util.Objective
-import java.util.EnumSet
-import kotlin.collections.HashMap
+import java.util.*
 
 class ColorInUseException : Exception()
 
@@ -21,7 +20,7 @@ class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
     }
 
     fun trackPlayer(playerName: String) {
-        val usedColors = objectiveMap.values.map(PlayerData::color)
+        val usedColors = objectiveMap.values.map { it.color }
         val color = CellColor.values().first { !usedColors.contains(it) }
         trackPlayer(playerName, color)
     }
@@ -33,13 +32,6 @@ class PlayerTracker(private val objectiveMap: MutableMap<String, PlayerData>) {
             trackPlayer(playerName)
         objectiveMap[playerName]?.objectives?.add(objective)
         updateHandler?.handleGoalUpdate(playerName, objective, true)
-    }
-
-    fun markNotComplete(playerName: String, objective: Objective) {
-        if (!isTracking(playerName))
-            trackPlayer(playerName)
-        objectiveMap[playerName]?.objectives?.remove(objective)
-        updateHandler?.handleGoalUpdate(playerName, objective, false)
     }
 
     fun setPlayers(objective: Objective, playerNames: List<String>) {

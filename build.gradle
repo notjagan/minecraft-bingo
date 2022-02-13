@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
 }
 
 group 'io.github.notjagan'
@@ -23,13 +23,10 @@ dependencies {
     implementation 'org.http4k:http4k-server-undertow'
     implementation 'org.http4k:http4k-format-jackson'
     implementation 'org.http4k:http4k-client-websocket'
-    implementation 'org.slf4j:slf4j-simple:1.7.33'
+    implementation 'org.slf4j:slf4j-simple:1.7.35'
 }
 
 jar {
-    manifest {
-        attributes['Main-Class'] = 'Bingo'
-    }
     configurations['compileClasspath'].forEach {
             from(zipTree(it.absoluteFile))
     }

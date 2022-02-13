@@ -8,8 +8,11 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.Plugin
+import util.Objective
 
 class Game(val state: State, val board: Board) {
+    val players: HashSet<Player> = HashSet()
+
     fun addPlayer(player: Player): Boolean {
         val playerName = player.name
         if (!state.tracker.isTracking(playerName)) {
@@ -28,6 +31,14 @@ class Game(val state: State, val board: Board) {
             return true
         }
         return false
+    }
+
+    fun setObjectives(objectives: Array<Array<Objective>>) {
+        board.clearListeners()
+        board.setObjectives(objectives)
+        for (player in players)
+            board.addListeners(player)
+        state.tracker.clearObjectives()
     }
 }
 

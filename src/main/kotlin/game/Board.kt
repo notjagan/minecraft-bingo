@@ -26,7 +26,8 @@ class Board(private val state: State) {
     fun addListeners(player: Player) {
         for (objective in objectives.flatten()) {
             val listener = objective.addListener(state, player)
-            listeners.add(listener)
+            if (listener != null)
+                listeners.add(listener)
         }
     }
 

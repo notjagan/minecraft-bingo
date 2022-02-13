@@ -1,6 +1,6 @@
 package bingosync
 
-import com.fasterxml.jackson.annotation.*
+import com.fasterxml.jackson.annotation.JsonProperty
 import game.Game
 import game.GameUpdateHandler
 import org.bukkit.Bukkit
@@ -82,13 +82,13 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
 
     private fun updateTracker(square: Square) {
         val objective = square.name.toObjective()
-        val playerNames = square.colors.mapNotNull(game.state.tracker::getPlayerForColor)
+        val playerNames = square.colors.mapNotNull { game.state.tracker.getPlayerForColor(it) }
         game.state.tracker.setPlayers(objective, playerNames)
     }
 
     private fun syncGame() {
         val map = squares
-            .associateBy(Square::slot)
+            .associateBy { it.slot }
             .mapValues {
                 it.value.name.toObjective()
             }
@@ -98,8 +98,7 @@ class BingosyncClient(private val roomJoinParameters: RoomJoinParameters, privat
                 map.getValue(boardSize * i + j)
             }
         }
-        game.board.setObjectives(objectives)
-        game.state.tracker.clearObjectives()
+        game.setObjectives(objectives)
         for (square in squares) {
             updateTracker(square)
         }

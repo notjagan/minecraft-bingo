@@ -4,7 +4,6 @@ import org.apache.commons.text.StringEscapeUtils
 import util.Constants
 import util.Objective
 import java.util.*
-import kotlin.collections.HashMap
 
 object BingosyncObjective {
     // initialized with manual override values

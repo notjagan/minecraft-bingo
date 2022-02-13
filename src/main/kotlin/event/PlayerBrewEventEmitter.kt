@@ -7,15 +7,14 @@ import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.BrewerInventory
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.Plugin
-import org.bukkit.potion.PotionType
 import util.BrewHistory
 import util.get
 import util.set
 
 @Suppress("unused")
-class PlayerBrewEventEmitter(plugin: Plugin) : Emitter<PlayerBrewEvent>(
+class PlayerBrewEventEmitter(plugin: Plugin) : DoubleEmitter<BrewEvent, InventoryOpenEvent, PlayerBrewEvent>(
     plugin,
-    Multiplier { event: BrewEvent ->
+    Multiplier { event ->
         val potions = event.results.mapNotNull {
             (it.itemMeta as? PotionMeta)?.basePotionData?.type
         }
@@ -27,15 +26,15 @@ class PlayerBrewEventEmitter(plugin: Plugin) : Emitter<PlayerBrewEvent>(
             (it as? Player)?.let { player -> PlayerBrewEvent(player, potions) }
         }
     },
-    Multiplier { event: InventoryOpenEvent ->
+    Propagator { event ->
         val holder = event.inventory.holder
         if (event.inventory is BrewerInventory && holder is BlockInventoryHolder) {
             val block = holder.block
             val metadata = block[key] ?: defaultMetadata
             val history = deserialize<BrewHistory>(metadata)
-            listOfNotNull((event.player as? Player)?.let { PlayerBrewEvent(it, history) })
+            (event.player as? Player)?.let { PlayerBrewEvent(it, history) }
         } else
-            listOf()
+            null
     }
 ) {
     companion object : MetadataProperty<BrewHistory>("history", hashSetOf())

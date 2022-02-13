@@ -9,6 +9,13 @@ class PlayerUpdateEnchantmentEvent(
     player: Player,
     val enchantments: Enchantments
 ) : PlayerEvent(player) {
-    private val handlers = HandlerList()
-    override fun getHandlers() = handlers
+    override fun getHandlers() = Companion.handlers
+
+    companion object {
+        private val handlers = HandlerList()
+
+        @Suppress("unused")
+        @JvmStatic
+        fun getHandlerList() = handlers
+    }
 }
