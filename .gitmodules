@@ -1,0 +1,3 @@
+[submodule "src/main/resources/bingosync"]
+	path = src/main/resources/bingosync
+	url = https://github.com/kbuzsaki/bingosync
